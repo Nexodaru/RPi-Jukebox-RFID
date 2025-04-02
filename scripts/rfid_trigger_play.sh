@@ -644,27 +644,27 @@ if [ ! -z "$FOLDER" ]; then
     then
         if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "We must play the playlist no matter what: \$PLAYPLAYLIST == yes"   >> $PATHDATA/../logs/debug.log; fi
 
-            # Above we already checked if the folder exists -d "$AUDIOFOLDERSPATH/$FOLDER"
-            #
-            # the process is as such - because of the recursive play option:
-            # - each folder can be played.
-            # - a single folder will create a playlist with the same name as the folder
-            # - because folders can live inside other folders, the relative path might contain
-            #   slashes (e.g. audiobooks/Moby Dick/)
-            # - because slashes can not be in the playlist name, slashes are replaced with " % "
-            # - the "recursive" option means that the content of the folder AND all subfolders
-            #   is being played
-            # - in this case, the playlist is related to the same folder name, which means we need
-            #   to make a different name for "recursive" playout
-            # - a recursive playlist has the suffix " %RCRSV%" - keeping it cryptic to avoid clashes
-            #   with a possible "real" name for a folder
-            # - with this new logic, there are no more SPECIALFORMAT playlists. Live streams and podcasts
-            #   are now all unfolded into the playlist
-            # - creating the playlist is now done in the php script with parameters:
-            #   $PATHDATA/playlist_recursive_by_folder.php --folder "${FOLDER}" --list 'recursive'
+        # Above we already checked if the folder exists -d "$AUDIOFOLDERSPATH/$FOLDER"
+        #
+        # the process is as such - because of the recursive play option:
+        # - each folder can be played.
+        # - a single folder will create a playlist with the same name as the folder
+        # - because folders can live inside other folders, the relative path might contain
+        #   slashes (e.g. audiobooks/Moby Dick/)
+        # - because slashes can not be in the playlist name, slashes are replaced with " % "
+        # - the "recursive" option means that the content of the folder AND all subfolders
+        #   is being played
+        # - in this case, the playlist is related to the same folder name, which means we need
+        #   to make a different name for "recursive" playout
+        # - a recursive playlist has the suffix " %RCRSV%" - keeping it cryptic to avoid clashes
+        #   with a possible "real" name for a folder
+        # - with this new logic, there are no more SPECIALFORMAT playlists. Live streams and podcasts
+        #   are now all unfolded into the playlist
+        # - creating the playlist is now done in the php script with parameters:
+        #   $PATHDATA/playlist_recursive_by_folder.php --folder "${FOLDER}" --list 'recursive'
 
-            if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR FOLDER: $FOLDER"   >> $PATHDATA/../logs/debug.log; fi
-            if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR PLAYLISTPATH: $PLAYLISTPATH"   >> $PATHDATA/../logs/debug.log; fi
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR FOLDER: $FOLDER"   >> $PATHDATA/../logs/debug.log; fi
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR PLAYLISTPATH: $PLAYLISTPATH"   >> $PATHDATA/../logs/debug.log; fi
 
 		# save position of current playing list "stop"
 		$PATHDATA/playout_controls.sh -c=playerstop

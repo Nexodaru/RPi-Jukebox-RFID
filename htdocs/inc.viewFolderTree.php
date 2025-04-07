@@ -27,7 +27,7 @@ $contentTree = array(); // this will be the tree we need for display
 */
 foreach($subfolders as $key => $subfolder) {
     /*
-    * Glob is not working when directory name with 
+    * Glob is not working when directory name with
     * special characters like square brackets “[ ]”.
     * So temporarily escape them php style.
     */
@@ -43,7 +43,7 @@ foreach($subfolders as $key => $subfolder) {
     $containingfiles = array();
     $containingaudiofiles = array();
     /*
-    * Get all the folders 
+    * Get all the folders
     */
     $subfolderfolders = array_filter(glob($subfolder.'/*'), 'is_dir');
     if(count($subfolderfolders) > 0){
@@ -54,13 +54,13 @@ foreach($subfolders as $key => $subfolder) {
         }
     }
     /*
-    * Get all the files 
+    * Get all the files
     */
     $subfolderfiles = array_filter(glob($subfolder.'/*'), 'is_file');
-    //print "<pre>".$subfolder." subfolderfiles"; print_r($subfolderfiles); print "</pre>"; //???        
+    //print "<pre>".$subfolder." subfolderfiles"; print_r($subfolderfiles); print "</pre>"; //???
     foreach($subfolderfiles as $subfolderfile) {
         if(
-            is_file($subfolderfile) 
+            is_file($subfolderfile)
             && basename($subfolderfile) != "folder.conf"
             && basename($subfolderfile) != "cover.jpg"
             && basename($subfolderfile) != "title.txt"
@@ -69,11 +69,11 @@ foreach($subfolders as $key => $subfolder) {
             // YES, we found a file
             $containingfiles[$subfolderfile] = $subfolderfile;
             //$containingfiles[$subfolderfile] = substr($subfolderfile, strlen($Audio_Folders_Path) + 1, strlen($subfolderfile));
-            
+
             // now see if the file we found is an audio file
 /**/
             if(
-                is_file($subfolderfile) 
+                is_file($subfolderfile)
                 && basename($subfolderfile) != "livestream.txt"
                 && basename($subfolderfile) != "podcast.txt"
             ){
@@ -84,7 +84,7 @@ foreach($subfolders as $key => $subfolder) {
         }
     }
     /*
-    * Glob is not working when directory name with 
+    * Glob is not working when directory name with
     * special characters like square brackets “[ ]”.
     * So we temporarily escaped them php style.
     * Now let's take the original path.
@@ -103,7 +103,7 @@ foreach($subfolders as $key => $subfolder) {
         $temp['path_abs'] = $subfolder;
         $temp['path_rel'] = substr($subfolderfile, strlen($Audio_Folders_Path) + 1, strlen($subfolderfile));
         $temp['basename'] = basename($subfolder);
-        // save the "type" of content 
+        // save the "type" of content
         if(file_exists($subfolder."/podcast.txt")){
             $temp['type'] = "podcast";
         } elseif(file_exists($subfolder."/livestream.txt")){
@@ -112,12 +112,12 @@ foreach($subfolders as $key => $subfolder) {
             $temp['type'] = "spotify";
             $titlefile = $subfolder."/title.txt";
             $coverfile = $subfolder."/cover.jpg";
-			
+
 			// this is a new and easier way for loading spotify informations!
 			$uri = file_get_contents($subfolder."/spotify.txt");
-			$url = "https://open.spotify.com/oembed/?url=".trim($uri)."&format=json";
+			$url = "https://open.spotify.com/oembed?url=".trim($uri)."&format=json";
 			$headers = stream_context_create(array('http'=>array('method'=>'GET', 'header'=>'user-agent:Phoniebox')));
-			
+
 			if (!file_exists($coverfile)) {
 				$str = file_get_contents($url, false, $headers);
 				$json  = json_decode($str, true);
@@ -126,7 +126,7 @@ foreach($subfolders as $key => $subfolder) {
 				$coverdl = file_get_contents($cover, false, $headers);
 				file_put_contents($coverfile, $coverdl);
 			}
-			
+
 			if (!file_exists($titlefile)) {
 				$str = file_get_contents($url, false, $headers);
 				$json  = json_decode($str, true);
@@ -134,7 +134,7 @@ foreach($subfolders as $key => $subfolder) {
 				$title = $json['title'];
 				file_put_contents($titlefile, $title);
 			}
-			
+
         } else {
             $temp['type'] = "generic";
         }
@@ -173,15 +173,15 @@ foreach($subfolders as $key => $subfolder) {
         */
     //}
 }
-if(count($contentTree) > 0) {   
+if(count($contentTree) > 0) {
     //print "\n    <div class='col-md-12'>";
 
     $rootBranch = current($contentTree);
-    
+
         $getSubDirectories = array();
         /*
         * get the recursive folder structure
-        */  
+        */
         $getSubDirectories[$rootBranch['path_abs']] = getSubDirectories($audiofolder);
         //$getSubDirectories = getSubDirectories($audiofolder);
 

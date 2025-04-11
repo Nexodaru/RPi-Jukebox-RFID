@@ -412,6 +412,18 @@ if [ ! -z "$FOLDER" ]; then
     if [ -d "${AUDIOFOLDERSPATH}/${FOLDER}" ]; then
         if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "\$FOLDER not empty and dir exists: ${AUDIOFOLDERSPATH}/${FOLDER}" >> $PATHDATA/../logs/debug.log; fi
 
+        . "$AUDIOFOLDERSPATH/$FOLDER/folder.conf"
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "Is FolderShuffle activated ?: ${FOLDERSHUFFLE}" >> $PATHDATA/../logs/debug.log; fi
+
+        # Look for file "random" to determine a random subfolder to be played
+        if [ $FOLDERSHUFFLE == "ON" ]
+        then
+            RND_FOLDER=`find "${AUDIOFOLDERSPATH}/${FOLDER}/" -mindepth 1 -type d | shuf -n 1`
+            FOLDER=${RND_FOLDER#"$AUDIOFOLDERSPATH/"}
+
+            if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "\$FOLDER changed by shuffle subfolder: ${AUDIOFOLDERSPATH}/${FOLDER}" >> $PATHDATA/../logs/debug.log; fi
+        fi
+
         # if we play a folder the first time, add some sensible information to the folder.conf
         if [ ! -f "${AUDIOFOLDERSPATH}/${FOLDER}/folder.conf" ]; then
             # now we create a default folder.conf file by calling this script
